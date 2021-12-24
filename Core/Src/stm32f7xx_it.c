@@ -1,0 +1,396 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    stm32f7xx_it.c
+  * @brief   Interrupt Service Routines.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+#include "stm32f7xx_it.h"
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN TD */
+
+/* USER CODE END TD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_adc1;
+extern DMA_HandleTypeDef hdma_adc2;
+extern DMA_HandleTypeDef hdma_adc3;
+extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
+extern ADC_HandleTypeDef hadc3;
+extern TIM_HandleTypeDef htim6;
+/* USER CODE BEGIN EV */
+
+/* USER CODE END EV */
+
+/******************************************************************************/
+/*           Cortex-M7 Processor Interruption and Exception Handlers          */
+/******************************************************************************/
+/**
+  * @brief This function handles Non maskable interrupt.
+  */
+void NMI_Handler(void)
+{
+  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+
+  /* USER CODE END NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+  while (1)
+  {
+  }
+  /* USER CODE END NonMaskableInt_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Hard fault interrupt.
+  */
+void HardFault_Handler(void)
+{
+  /* USER CODE BEGIN HardFault_IRQn 0 */
+  Error_Handler();
+
+  /* USER CODE END HardFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+    /* USER CODE END W1_HardFault_IRQn 0 */
+  }
+}
+
+/**
+  * @brief This function handles Memory management fault.
+  */
+void MemManage_Handler(void)
+{
+  /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+
+  /* USER CODE END MemoryManagement_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+    /* USER CODE END W1_MemoryManagement_IRQn 0 */
+  }
+}
+
+/**
+  * @brief This function handles Pre-fetch fault, memory access fault.
+  */
+void BusFault_Handler(void)
+{
+  /* USER CODE BEGIN BusFault_IRQn 0 */
+
+  /* USER CODE END BusFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_BusFault_IRQn 0 */
+    /* USER CODE END W1_BusFault_IRQn 0 */
+  }
+}
+
+/**
+  * @brief This function handles Undefined instruction or illegal state.
+  */
+void UsageFault_Handler(void)
+{
+  /* USER CODE BEGIN UsageFault_IRQn 0 */
+
+  /* USER CODE END UsageFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+    /* USER CODE END W1_UsageFault_IRQn 0 */
+  }
+}
+
+/**
+  * @brief This function handles System service call via SWI instruction.
+  */
+void SVC_Handler(void)
+{
+  /* USER CODE BEGIN SVCall_IRQn 0 */
+
+  /* USER CODE END SVCall_IRQn 0 */
+  /* USER CODE BEGIN SVCall_IRQn 1 */
+
+  /* USER CODE END SVCall_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Debug monitor.
+  */
+void DebugMon_Handler(void)
+{
+  /* USER CODE BEGIN DebugMonitor_IRQn 0 */
+
+  /* USER CODE END DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 1 */
+
+  /* USER CODE END DebugMonitor_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Pendable request for system service.
+  */
+void PendSV_Handler(void)
+{
+  /* USER CODE BEGIN PendSV_IRQn 0 */
+
+  /* USER CODE END PendSV_IRQn 0 */
+  /* USER CODE BEGIN PendSV_IRQn 1 */
+
+  /* USER CODE END PendSV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles System tick timer.
+  */
+void SysTick_Handler(void)
+{
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+
+  /* USER CODE END SysTick_IRQn 0 */
+  HAL_IncTick();
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
+}
+
+/******************************************************************************/
+/* STM32F7xx Peripheral Interrupt Handlers                                    */
+/* Add here the Interrupt Handlers for the used peripherals.                  */
+/* For the available peripheral interrupt handler names,                      */
+/* please refer to the startup file (startup_stm32f7xx.s).                    */
+/******************************************************************************/
+
+/**
+  * @brief This function handles ADC1, ADC2 and ADC3 global interrupts.
+  */
+void ADC_IRQHandler(void)
+{
+  /* USER CODE BEGIN ADC_IRQn 0 */
+
+  if (hadc1.Instance->SR & ADC_SR_EOC)
+  {
+    hadc1.Instance->SR &= ~(ADC_SR_EOC);
+  }
+
+  if (hadc2.Instance->SR & ADC_SR_EOC)
+  {
+    hadc2.Instance->SR &= ~(ADC_SR_EOC);
+  }
+
+  if (hadc3.Instance->SR & ADC_SR_EOC)
+  {
+    hadc3.Instance->SR &= ~(ADC_SR_EOC);
+  }
+
+#ifdef USE_HAL
+  /* USER CODE END ADC_IRQn 0 */
+  HAL_ADC_IRQHandler(&hadc1);
+  HAL_ADC_IRQHandler(&hadc2);
+  HAL_ADC_IRQHandler(&hadc3);
+  /* USER CODE BEGIN ADC_IRQn 1 */
+#endif
+  /* USER CODE END ADC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
+  */
+void TIM6_DAC_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
+
+  if (htim6.Instance->SR & TIM_SR_UIF)
+  {
+    htim6.Instance->SR &= ~(TIM_SR_UIF);
+    hadc1.Instance->CR2 |= ADC_CR2_SWSTART;
+
+    (GPIOB->ODR & GPIO_PIN_7) ? (GPIOB->BSRR = GPIO_PIN_7 << 16u) : (GPIOB->BSRR = GPIO_PIN_7);
+  }
+
+#ifdef USE_HAL
+  /* USER CODE END TIM6_DAC_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
+#endif
+
+  /* USER CODE END TIM6_DAC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream0 global interrupt.
+  */
+void DMA2_Stream0_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
+  if (DMA2->LISR & DMA_LISR_TCIF0)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTCIF0;
+  }
+
+  if (DMA2->LISR & DMA_LISR_HTIF0)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CHTIF0;
+  }
+
+  if (DMA2->LISR & DMA_LISR_TEIF0)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTEIF0;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_DMEIF0)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CDMEIF0;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_FEIF0)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CFEIF0;
+    Error_Handler();
+  }
+
+#ifdef USE_HAL
+  /* USER CODE END DMA2_Stream0_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc1);
+  /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
+#endif
+
+  /* USER CODE END DMA2_Stream0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream1 global interrupt.
+  */
+void DMA2_Stream1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream1_IRQn 0 */
+  if (DMA2->LISR & DMA_LISR_TCIF1)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTCIF1;
+  }
+
+  if (DMA2->LISR & DMA_LISR_HTIF1)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CHTIF1;
+  }
+
+  if (DMA2->LISR & DMA_LISR_TEIF1)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTEIF1;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_DMEIF1)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CDMEIF1;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_FEIF1)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CFEIF1;
+    Error_Handler();
+  }
+
+#ifdef USE_HAL
+  /* USER CODE END DMA2_Stream1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc3);
+  /* USER CODE BEGIN DMA2_Stream1_IRQn 1 */
+#endif
+
+  /* USER CODE END DMA2_Stream1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream2 global interrupt.
+  */
+void DMA2_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
+  if (DMA2->LISR & DMA_LISR_TCIF2)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTCIF2;
+  }
+
+  if (DMA2->LISR & DMA_LISR_HTIF2)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CHTIF2;
+  }
+
+  if (DMA2->LISR & DMA_LISR_TEIF2)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CTEIF2;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_DMEIF2)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CDMEIF2;
+    Error_Handler();
+  }
+
+  if (DMA2->LISR & DMA_LISR_FEIF2)
+  {
+    DMA2->LIFCR |= DMA_LIFCR_CFEIF2;
+    Error_Handler();
+  }
+
+#ifdef USE_HAL
+  /* USER CODE END DMA2_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc2);
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
+#endif
+
+  /* USER CODE END DMA2_Stream2_IRQn 1 */
+}
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
